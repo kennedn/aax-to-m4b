@@ -85,8 +85,10 @@ mkdir "$out_dir" &> /dev/null
 
 # Read chapters and prepare ffmpeg split commands
 ffmpeg_args=("-i" "pipe:0" "-v" "fatal" "-activation_bytes" "$activation_bytes")
+i=1
 while read -r start end title; do
-  ffmpeg_args+=("-c" "copy" "-ss" "$start" "-to" "$end" "$out_dir/$title.m4b")
+    ffmpeg_args+=("-c" "copy" "-ss" "$start" "-to" "$end" "$out_dir/$(printf "%03d" $i)_$title.m4b")
+  ((i++))
 done <<< "$(ffprobe -i "$input_file" -print_format json -show_chapters 2> /dev/null\
     | jq -r '.chapters[] | .start_time + " " + .end_time + " " + (.tags.title | gsub(" "; "_"))')"
 
