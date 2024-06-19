@@ -84,7 +84,7 @@ fi
 mkdir "$out_dir" &> /dev/null
 
 # Read chapters and prepare ffmpeg split commands
-ffmpeg_args=("-i" "pipe:0" "-v" "fatal" "-activation_bytes" "$activation_bytes")
+ffmpeg_args=("-activation_bytes" "$activation_bytes" "-i" "pipe:0" "-v" "fatal")
 i=1
 while read -r start end title; do
     ffmpeg_args+=("-c" "copy" "-ss" "$start" "-to" "$end" "$out_dir/$(printf "%03d" $i)_$title.m4b")
