@@ -18,7 +18,7 @@ sudo apt install jq ffmpeg pv
 # Usage
 
 ```
-./aax_to_m4b [options] <input_file>
+./aax_to_m4b.sh [options] <input_file>
 
 Options:
   -a, --activation-bytes <bytes>  Activation bytes required for ffmpeg (required)
