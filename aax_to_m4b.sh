@@ -84,13 +84,14 @@ fi
 mkdir "$out_dir" &> /dev/null
 
 # Read chapters and prepare ffmpeg split commands
-ffmpeg_args=("-activation_bytes" "$activation_bytes" "-i" "pipe:0" "-v" "fatal")
+ffmpeg_args=("-activation_bytes" "$activation_bytes" "-i" "${input_file}" "-v" "fatal")
 i=1
 while read -r start end title; do
-    ffmpeg_args+=("-c" "copy" "-ss" "$start" "-to" "$end" "$out_dir/$(printf "%03d" $i)_$title.m4b")
+    ffmpeg_args+=("-c" "copy" "-brand" "isom" "-movflags" "+faststart" "-ss" "$start" "-to" "$end" "$out_dir/$(printf "%03d" $i)_$title.m4b")
   ((i++))
 done <<< "$(ffprobe -i "$input_file" -print_format json -show_chapters 2> /dev/null\
-    | jq -r '.chapters[] | .start_time + " " + .end_time + " " + (.tags.title | gsub(" "; "_"))')"
+    | jq -r '.chapters[] | [.start_time,.end_time,(.tags.title | gsub(" "; "_"))] | join(" ")')"
 
 # Run ffmpeg command
-pv "${input_file}" | ffmpeg "${ffmpeg_args[@]}"
+ffmpeg "${ffmpeg_args[@]}" & 
+progress -m -p $!
