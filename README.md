@@ -7,12 +7,12 @@ Split aax audible file into m4b chapters using ffmpeg. Much faster than m4b-tool
 
 - jq
 - ffmpeg
-- pv
+- progress
 
 e.g:
 
 ```bash
-sudo apt install jq ffmpeg pv
+sudo apt install jq ffmpeg progress
 ```
 
 # Usage
